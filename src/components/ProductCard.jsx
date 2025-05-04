@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { StarIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product, isCarousel = false }) => {
@@ -71,7 +71,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
               </div>
               {product.rating && (
                 <div className="flex items-center">
-                  <Star className="h-5 w-5 text-yellow-500 mr-1" />
+                  <span class="text-yellow-500 mr-1 h-5 2-5">★</span>
                   <span className="text-[#030303] font-medium">
                     {product.rating.rate}
                   </span>
