@@ -137,13 +137,13 @@ const LandingPage = () => {
       <Navbar />
       <div className="bg-[#123458] text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center">
-            <div className="flex">
+          <div className="flex justify-between items-center overflow-x-auto">
+            <div className="flex flex-nowrap">
               {categories.map((category, index) => (
                 <button
                   key={index}
                   onClick={() => handleCategoryClick(category.category)}
-                  className="px-12 py-4 font-bold hover:bg-[#030303] transition-colors cursor-pointer"
+                  className="px-4 sm:px-8 md:px-12 py-4 font-bold hover:bg-[#030303] transition-colors cursor-pointer whitespace-nowrap"
                 >
                   {category.name}
                 </button>
@@ -154,7 +154,7 @@ const LandingPage = () => {
       </div>
 
       <div
-        className="relative w-full h-[500px] overflow-hidden"
+        className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden"
         ref={carouselRef}
       >
         {loading ? (
@@ -200,16 +200,16 @@ const LandingPage = () => {
         )}
       </div>
 
-      <div className="py-16 bg-[#D4C9BE]">
+      <div className="py-8 sm:py-12 md:py-16 bg-[#D4C9BE]">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-[#123458] mb-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-10">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#123458] mb-4 sm:mb-6">
               FLASH SALE ENDS IN
             </h2>
             <TimerDisplay timeLeft={timeLeft} />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {loading ? (
               Array.from({ length: 3 }).map((_, i) => (
                 <div
@@ -242,13 +242,13 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="py-16 bg-[#F1EFEC]">
+      <div className="py-8 sm:py-12 md:py-16 bg-[#F1EFEC]">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-[#030303] mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#030303] mb-8 sm:mb-10 md:mb-12">
             COLLECTIONS
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {!loading && products.length > 0 ? (
               ["electronics", "jewelery", "men's clothing"].map(
                 (category, index) => {
@@ -294,13 +294,13 @@ const LandingPage = () => {
         </div>
       </div>
 
-      <div className="py-16 bg-white">
+      <div className="py-8 sm:py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-[#030303] mb-12">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-[#030303] mb-8 sm:mb-10 md:mb-12">
             WHAT OUR CUSTOMERS SAY
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {reviews.map((review, index) => (
               <ReviewCard
                 key={index}
@@ -313,22 +313,22 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      <div className="py-12 bg-[#123458]">
+      <div className="py-8 sm:py-10 md:py-12 bg-[#123458]">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">
             JOIN OUR COMMUNITY
           </h2>
-          <p className="text-white/80 mb-8 max-w-2xl mx-auto">
+          <p className="text-white/80 mb-6 sm:mb-8 max-w-2xl mx-auto text-sm sm:text-base">
             Subscribe to our newsletter for exclusive deals, new arrivals, and
             special offers. Be the first to know about our flash sales!
           </p>
-          <form className="flex max-w-md mx-auto">
+          <form className="flex flex-col sm:flex-row max-w-md mx-auto gap-2">
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-grow px-4 py-3 rounded-l focus:outline-none bg-white"
+              className="w-full px-4 py-3 rounded sm:rounded-l sm:rounded-r-none focus:outline-none bg-white"
             />
-            <button className="bg-[#030303] text-white font-bold px-6 py-3 rounded-r hover:bg-gray-900 transition-colors">
+            <button className="w-full sm:w-auto bg-[#030303] text-white font-bold px-6 py-3 rounded sm:rounded-l-none sm:rounded-r hover:bg-gray-900 transition-colors">
               SUBSCRIBE
             </button>
           </form>
