@@ -36,21 +36,11 @@ const ProductsPage = () => {
         return res.json();
       })
       .then((data) => {
-        const productsWithFlashSales = data.map((product) => {
-          const discount = getRandomDiscount();
-          const originalPrice = parseFloat(product.price).toFixed(2);
-          const discountedPrice = (originalPrice * (1 - discount / 100)).toFixed(2);
+        // Add products without any discounts
+        setProducts(data);
+        setFilteredProducts(data);
 
-          return {
-            ...product,
-            originalPrice: originalPrice,
-            price: discountedPrice,
-            discount,
-          };
-        });
-        setProducts(productsWithFlashSales);
-        setFilteredProducts(productsWithFlashSales);
-
+        // Extract unique categories
         const uniqueCategories = [
           'all',
           ...new Set(data.map((product) => product.category)),
