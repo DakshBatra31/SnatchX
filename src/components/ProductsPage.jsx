@@ -22,14 +22,12 @@ const ProductsPage = () => {
     }
   }, [location.state]);
 
-  // Function to generate a random discount between 10% and 50%
   const getRandomDiscount = () => {
-    return Math.floor(Math.random() * 41) + 10; // Random number between 10 and 50
+    return Math.floor(Math.random() * 41) + 10;   
   };
 
   useEffect(() => {
     setLoading(true);
-    // Fetch products from Fake Store API
     fetch('https://fakestoreapi.com/products')
       .then((res) => {
         if (!res.ok) {
@@ -38,24 +36,21 @@ const ProductsPage = () => {
         return res.json();
       })
       .then((data) => {
-        // Add some mock data for flash sales with random discounts
         const productsWithFlashSales = data.map((product) => {
           const discount = getRandomDiscount();
           const originalPrice = parseFloat(product.price).toFixed(2);
-          // Calculate the discounted price (original - discount%)
           const discountedPrice = (originalPrice * (1 - discount / 100)).toFixed(2);
 
           return {
             ...product,
             originalPrice: originalPrice,
-            price: discountedPrice, // Override the API price with discounted price
+            price: discountedPrice,
             discount,
           };
         });
         setProducts(productsWithFlashSales);
         setFilteredProducts(productsWithFlashSales);
 
-        // Extract unique categories
         const uniqueCategories = [
           'all',
           ...new Set(data.map((product) => product.category)),
@@ -72,14 +67,12 @@ const ProductsPage = () => {
   useEffect(() => {
     let filtered = products;
 
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(
         (product) => product.category === selectedCategory
       );
     }
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter((product) =>
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,8 +86,6 @@ const ProductsPage = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // The search is already handled by the useEffect that watches searchTerm
-    // This just prevents the default form submission behavior
   };
 
   const handleResetSearch = () => {

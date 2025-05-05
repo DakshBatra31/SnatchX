@@ -1,13 +1,6 @@
 import { Star } from "lucide-react";
-import { useState, useEffect } from "react";
 
-const ReviewCard = ({ initials, name, review }) => {
-  const [rating, setRating] = useState(0);
-
-  useEffect(() => {
-    setRating(Math.floor(Math.random() * 5) + 1);
-  }, []);
-
+const ReviewCard = ({ initials, name, review, rating }) => {
   return (
     <div className="bg-[#F1EFEC] p-6 rounded-lg">
       <div className="flex items-center mb-4">
@@ -18,7 +11,7 @@ const ReviewCard = ({ initials, name, review }) => {
           <h4 className="font-bold text-[#030303]">{name}</h4>
           <div className="flex text-yellow-400">
             {[...Array(rating)].map((_, i) => (
-              <Star key={i} className="w-4 h-4" />
+              <span class="text-yellow-500 mr-1 h-5 2-5">★</span>
             ))}
           </div>
         </div>

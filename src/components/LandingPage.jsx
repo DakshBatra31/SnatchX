@@ -116,16 +116,19 @@ const LandingPage = () => {
       initials: "JD",
       name: "John Doe",
       review: "The quality of products is amazing! I got my order within 2 days and everything was perfect.",
+      rating: 5
     },
     {
       initials: "AS",
       name: "Alice Smith",
       review: "Best flash sale platform I've used! The deals are incredible and the checkout process is smooth.",
+      rating: 5
     },
     {
       initials: "MB",
       name: "Mike Brown",
       review: "The customer service is outstanding. They helped me resolve an issue within minutes!",
+      rating: 4
     },
   ];
 
@@ -304,6 +307,7 @@ const LandingPage = () => {
                 initials={review.initials}
                 name={review.name}
                 review={review.review}
+                rating={review.rating}
               />
             ))}
           </div>
