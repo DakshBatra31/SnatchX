@@ -36,11 +36,10 @@ const ProductsPage = () => {
         return res.json();
       })
       .then((data) => {
-        // Add products without any discounts
+        
         setProducts(data);
         setFilteredProducts(data);
 
-        // Extract unique categories
         const uniqueCategories = [
           'all',
           ...new Set(data.map((product) => product.category)),

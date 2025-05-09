@@ -36,7 +36,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 {product.description}
               </p>
               <Link
-                to='/'
+                to={`/products/${product.id}`}
                 className="inline-block px-8 py-3 mt-4 bg-white text-[#030303] rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 View Product
@@ -45,7 +45,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
           </div>
         </>
       ) : (
-        <>
+        <Link to={`/products/${product.id}`} className="block h-full">
           <div className="h-64 w-full flex items-center justify-center p-4 bg-white">
             <div className="relative w-full h-full">
               <img
@@ -71,7 +71,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
               </div>
               {product.rating && (
                 <div className="flex items-center">
-                  <span class="text-yellow-500 mr-1 h-5 2-5">★</span>
+                  <span className="text-yellow-500 mr-1 h-5 w-5">★</span>
                   <span className="text-[#030303] font-medium">
                     {product.rating.rate}
                   </span>
@@ -79,7 +79,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
               )}
             </div>
           </div>
-        </>
+        </Link>
       )}
     </div>
   );
