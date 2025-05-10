@@ -1,7 +1,16 @@
-import { StarIcon } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useWishlist } from "../context/WishlistContext";
 
 const ProductCard = ({ product, isCarousel = false }) => {
+  const { isInWishlist, toggleWishlist } = useWishlist();
+
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
+  };
+
   return (
     <div
       className={`${
@@ -46,7 +55,7 @@ const ProductCard = ({ product, isCarousel = false }) => {
         </>
       ) : (
         <Link to={`/products/${product.id}`} className="block h-full">
-          <div className="h-64 w-full flex items-center justify-center p-4 bg-white">
+          <div className="h-64 w-full flex items-center justify-center p-4 bg-white relative">
             <div className="relative w-full h-full">
               <img
                 src={product.image}
@@ -55,6 +64,18 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 loading="lazy"
               />
             </div>
+            <button
+              onClick={handleWishlistClick}
+              className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors z-10"
+            >
+              <Heart
+                className={`h-5 w-5 ${
+                  isInWishlist(product.id)
+                    ? "text-red-500 fill-red-500"
+                    : "text-gray-400"
+                }`}
+              />
+            </button>
           </div>
           <div className="p-4">
             <h3 className="font-bold text-[#030303] text-lg mb-1 line-clamp-1">

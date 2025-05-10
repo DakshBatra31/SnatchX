@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star } from 'lucide-react';
+import { ArrowLeft, Star, Heart } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import { useWishlist } from '../context/WishlistContext';
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
@@ -9,6 +10,13 @@ const ProductDetailPage = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isInWishlist, toggleWishlist } = useWishlist();
+
+  const handleWishlistClick = () => {
+    if (product) {
+      toggleWishlist(product);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -84,7 +92,7 @@ const ProductDetailPage = () => {
       </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-6 rounded-lg shadow-md relative">
           <img 
             src={product.image} 
             alt={product.title} 
@@ -94,6 +102,18 @@ const ProductDetailPage = () => {
               e.target.src = 'https://placehold.co/600x400?text=Image+Not+Available';
             }}
           />
+          <button
+            onClick={handleWishlistClick}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 hover:bg-white transition-colors shadow-md"
+          >
+            <Heart
+              className={`h-6 w-6 ${
+                isInWishlist(product.id)
+                  ? "text-red-500 fill-red-500"
+                  : "text-gray-400"
+              }`}
+            />
+          </button>
         </div>
 
         <div className="space-y-6">
