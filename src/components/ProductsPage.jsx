@@ -3,8 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import { useWishlist } from '../context/WishlistContext';
 import { Heart, Search, X } from 'lucide-react';
-
+import Navbar from './Navbar';
 const ProductsPage = ({ initialTab }) => {
+  
   const location = useLocation();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -101,6 +102,8 @@ const ProductsPage = ({ initialTab }) => {
   };
 
   return (
+    <>
+    <Navbar />
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#123458] mb-6">
@@ -235,6 +238,7 @@ const ProductsPage = ({ initialTab }) => {
         </>
       )}
     </div>
+    </>
   );
 };
 
