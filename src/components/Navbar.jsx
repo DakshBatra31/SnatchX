@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, User } from 'lucide-react';
-
-const Navbar = () => {
-=======
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Heart, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -48,7 +42,6 @@ const Navbar = () => {
     window.location.reload();
   };
 
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,24 +70,6 @@ const Navbar = () => {
           <div className="flex items-center space-x-6">
             <Link
               to="/cart"
-<<<<<<< HEAD
-              className="p-2 text-[#030303] hover:text-[#123458] rounded-full hover:bg-[#F1EFEC] transition-colors"
-            >
-              <ShoppingCart className="h-6 w-6" />
-            </Link>
-            <Link
-              to="/wishlist"
-              className="p-2 text-[#030303] hover:text-[#123458] rounded-full hover:bg-[#F1EFEC] transition-colors"
-            >
-              <Heart className="h-6 w-6" />
-            </Link>
-            <Link
-              to="/login"
-              className="p-2 text-[#030303] hover:text-[#123458] rounded-full hover:bg-[#F1EFEC] transition-colors"
-            >
-              <User className="h-6 w-6" />
-            </Link>
-=======
               className="relative p-2 text-[#030303] hover:text-[#123458] rounded-full hover:bg-[#F1EFEC] transition-colors"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -147,7 +122,6 @@ const Navbar = () => {
                 </div>
               )}
             </div>
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
           </div>
         </div>
       </div>

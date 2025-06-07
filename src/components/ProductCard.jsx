@@ -1,11 +1,6 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
-<<<<<<< HEAD
-
-const ProductCard = ({ product, isCarousel = false }) => {
-  const { isInWishlist, toggleWishlist } = useWishlist();
-=======
 import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
 
@@ -27,7 +22,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
   useEffect(() => {
     setDiscount(getOrSetDiscount(product.id));
   }, [product.id]);
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
@@ -35,8 +29,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
     toggleWishlist(product);
   };
 
-<<<<<<< HEAD
-=======
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -58,7 +50,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
   const originalPrice = product.price * 75;
   const discountedPrice = originalPrice * (1 - discount / 100);
 
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
   return (
     <div
       className={`${
@@ -111,14 +102,11 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 className="absolute inset-0 w-full h-full object-contain"
                 loading="lazy"
               />
-<<<<<<< HEAD
-=======
               {discount && (
                 <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded z-20">
                   {discount}% OFF
                 </span>
               )}
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
             </div>
             <button
               onClick={handleWishlistClick}
@@ -140,13 +128,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
             <p className="text-gray-600 text-sm mb-2 line-clamp-2">
               {product.description}
             </p>
-<<<<<<< HEAD
-            <div className="flex items-center justify-between">
-              <div>
-                <span className="text-[#123458] font-bold text-lg">
-                  ₹{(product.price * 75).toFixed(2)}
-                </span>
-=======
             <div className="flex items-center justify-between mb-2">
               <div>
                 <span className="text-[#123458] font-bold text-lg mr-2">
@@ -157,7 +138,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
                     ₹{originalPrice.toFixed(2)}
                   </span>
                 )}
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
               </div>
               {product.rating && (
                 <div className="flex items-center">
@@ -168,8 +148,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 </div>
               )}
             </div>
-<<<<<<< HEAD
-=======
             <button
               onClick={handleAddToCart}
               className={`w-full px-4 py-2 rounded-lg font-semibold transition-colors mt-2 ${
@@ -206,7 +184,6 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 </div>
               )}
             </button>
->>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
           </div>
         </Link>
       )}
