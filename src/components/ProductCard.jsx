@@ -1,9 +1,33 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
+<<<<<<< HEAD
 
 const ProductCard = ({ product, isCarousel = false }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
+=======
+import { useCart } from "../context/CartContext";
+import { useEffect, useState } from "react";
+
+const getOrSetDiscount = (productId) => {
+  const key = `discount_${productId}`;
+  let discount = localStorage.getItem(key);
+  if (discount) return Number(discount);
+  discount = Math.floor(Math.random() * 61) + 20; // 20-80
+  localStorage.setItem(key, discount);
+  return discount;
+};
+
+const ProductCard = ({ product, isCarousel = false }) => {
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInCart, addToCart, updateQuantity, cart } = useCart();
+  const [discount, setDiscount] = useState(() => getOrSetDiscount(product.id));
+  const [showQuantity, setShowQuantity] = useState(false);
+
+  useEffect(() => {
+    setDiscount(getOrSetDiscount(product.id));
+  }, [product.id]);
+>>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
@@ -11,6 +35,30 @@ const ProductCard = ({ product, isCarousel = false }) => {
     toggleWishlist(product);
   };
 
+<<<<<<< HEAD
+=======
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isInCart(product.id) || currentQuantity === 0) {
+      addToCart(product, 1);
+    }
+  };
+
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity < 1) {
+      updateQuantity(product.id, 0);
+      return;
+    }
+    updateQuantity(product.id, newQuantity);
+  };
+
+  const currentQuantity = cart.find(item => item.id === product.id)?.quantity || 0;
+
+  const originalPrice = product.price * 75;
+  const discountedPrice = originalPrice * (1 - discount / 100);
+
+>>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
   return (
     <div
       className={`${
@@ -63,6 +111,14 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 className="absolute inset-0 w-full h-full object-contain"
                 loading="lazy"
               />
+<<<<<<< HEAD
+=======
+              {discount && (
+                <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded z-20">
+                  {discount}% OFF
+                </span>
+              )}
+>>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
             </div>
             <button
               onClick={handleWishlistClick}
@@ -84,11 +140,24 @@ const ProductCard = ({ product, isCarousel = false }) => {
             <p className="text-gray-600 text-sm mb-2 line-clamp-2">
               {product.description}
             </p>
+<<<<<<< HEAD
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-[#123458] font-bold text-lg">
                   ₹{(product.price * 75).toFixed(2)}
                 </span>
+=======
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <span className="text-[#123458] font-bold text-lg mr-2">
+                  ₹{discountedPrice.toFixed(2)}
+                </span>
+                {discount && (
+                  <span className="text-gray-400 line-through text-sm mr-1">
+                    ₹{originalPrice.toFixed(2)}
+                  </span>
+                )}
+>>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
               </div>
               {product.rating && (
                 <div className="flex items-center">
@@ -99,6 +168,45 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 </div>
               )}
             </div>
+<<<<<<< HEAD
+=======
+            <button
+              onClick={handleAddToCart}
+              className={`w-full px-4 py-2 rounded-lg font-semibold transition-colors mt-2 ${
+                isInCart(product.id) && currentQuantity > 0
+                  ? "bg-[#123458] text-white hover:bg-[#123458]/90"
+                  : "bg-[#123458] text-white hover:bg-[#123458]/90"
+              }`}
+            >
+              {!isInCart(product.id) || currentQuantity === 0 ? (
+                "Add to Cart"
+              ) : (
+                <div className="flex items-center justify-center space-x-2">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleQuantityChange(currentQuantity - 1);
+                    }}
+                    className="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"
+                  >
+                    -
+                  </button>
+                  <span>{currentQuantity}</span>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleQuantityChange(currentQuantity + 1);
+                    }}
+                    className="w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </button>
+>>>>>>> 671249d (Added Login/SignUp functionality, modified earlier components)
           </div>
         </Link>
       )}
