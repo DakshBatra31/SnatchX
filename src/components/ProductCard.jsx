@@ -61,8 +61,8 @@ const ProductCard = ({ product, isCarousel = false }) => {
       {isCarousel ? (
         <>
           <div className="absolute inset-0 bg-gradient-to-r from-[#030303] to-transparent z-10"></div>
-          <div className="w-1/2 h-full flex items-center justify-end pr-10 z-20">
-            <div className="w-[400px] h-[400px] bg-transparent relative">
+          <div className="w-full md:w-1/2 h-full flex items-center justify-center md:justify-end md:pr-10 z-20">
+            <div className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] bg-transparent relative">
               <img
                 style={{ filter: "invert(1)" }}
                 src={product.image}
@@ -72,20 +72,20 @@ const ProductCard = ({ product, isCarousel = false }) => {
               />
             </div>
           </div>
-          <div className="w-1/2 z-20 text-left pl-10">
-            <div className="max-w-lg">
+          <div className="w-full md:w-1/2 z-20 text-center md:text-left px-4 md:pl-10 md:pr-0">
+            <div className="max-w-lg mx-auto md:mx-0">
               <div className="bg-[#123458] inline-block px-4 py-1 mb-4 text-white text-sm font-bold uppercase">
                 {product.category}
               </div>
-              <h1 className="text-5xl font-bold text-white mb-4">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4">
                 {product.title}
               </h1>
-              <p className="text-xl text-white mb-4 line-clamp-2">
+              <p className="text-base sm:text-lg md:text-xl text-white mb-4 line-clamp-2">
                 {product.description}
               </p>
               <Link
                 to={`/products/${product.id}`}
-                className="inline-block px-8 py-3 mt-4 bg-white text-[#030303] rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="inline-block px-6 py-2 md:px-8 md:py-3 mt-4 bg-white text-[#030303] rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 View Product
               </Link>

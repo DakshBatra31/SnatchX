@@ -154,7 +154,7 @@ const LandingPage = () => {
       </div>
 
       <div
-        className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden"
+        className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden"
         ref={carouselRef}
       >
         {loading ? (
@@ -172,11 +172,11 @@ const LandingPage = () => {
               ))}
             </div>
 
-            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+            <div className="absolute bottom-4 sm:bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
               {products.slice(0, 5).map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full focus:outline-none border border-white ${
+                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full focus:outline-none border border-white ${
                     currentSlide === index ? "bg-white" : "bg-transparent"
                   }`}
                   onClick={() => goToSlide(index)}
@@ -185,16 +185,16 @@ const LandingPage = () => {
             </div>
 
             <button
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm p-2 rounded-full z-20 hover:bg-white/50 transition-colors"
+              className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm p-1 sm:p-2 rounded-full z-20 hover:bg-white/50 transition-colors"
               onClick={goToPrevSlide}
             >
-              <ChevronLeft className="h-6 w-6 text-white" />
+              <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </button>
             <button
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm p-2 rounded-full z-20 hover:bg-white/50 transition-colors"
+              className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/30 backdrop-blur-sm p-1 sm:p-2 rounded-full z-20 hover:bg-white/50 transition-colors"
               onClick={goToNextSlide}
             >
-              <ChevronRight className="h-6 w-6 text-white" />
+              <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6 text-white" />
             </button>
           </>
         )}
