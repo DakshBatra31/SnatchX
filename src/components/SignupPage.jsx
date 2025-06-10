@@ -2,26 +2,33 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { UserPlus } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signup } = useAuth();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (users.find((u) => u.email === email)) {
-      setError("Email already exists");
-      return;
+    try {
+      setError("");
+      setLoading(true);
+      await signup(email, password, name);
+      navigate("/");
+    } catch (error) {
+      setError(
+        error.code === "auth/email-already-in-use"
+          ? "Email already exists"
+          : "Failed to create an account"
+      );
+    } finally {
+      setLoading(false);
     }
-    const newUser = { name, email, password };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-    navigate("/");
   };
 
   return (
@@ -68,14 +75,16 @@ const SignupPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="new-password"
+                minLength={6}
               />
             </div>
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
             <button
               type="submit"
-              className="w-full bg-[#123458] text-white py-2.5 rounded-lg font-semibold text-lg shadow hover:bg-[#0e2747] transition-colors"
+              disabled={loading}
+              className="w-full bg-[#123458] text-white py-2.5 rounded-lg font-semibold text-lg shadow hover:bg-[#0e2747] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Sign Up
+              {loading ? "Creating account..." : "Sign Up"}
             </button>
           </form>
           <div className="mt-6 text-center text-sm text-gray-600">

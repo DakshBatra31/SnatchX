@@ -2,22 +2,31 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import { User } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find((u) => u.email === email && u.password === password);
-    if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
+    try {
+      setError("");
+      setLoading(true);
+      await login(email, password);
       navigate("/");
-    } else {
-      setError("Invalid email or password");
+    } catch (error) {
+      setError(
+        error.code === "auth/invalid-credential"
+          ? "Invalid email or password"
+          : "Failed to sign in"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,9 +68,10 @@ const LoginPage = () => {
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
             <button
               type="submit"
-              className="w-full bg-[#123458] text-white py-2.5 rounded-lg font-semibold text-lg shadow hover:bg-[#0e2747] transition-colors"
+              disabled={loading}
+              className="w-full bg-[#123458] text-white py-2.5 rounded-lg font-semibold text-lg shadow hover:bg-[#0e2747] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Login
+              {loading ? "Signing in..." : "Login"}
             </button>
           </form>
           <div className="mt-6 text-center text-sm text-gray-600">

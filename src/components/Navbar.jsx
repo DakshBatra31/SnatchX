@@ -3,20 +3,16 @@ import { ShoppingCart, Heart, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useEffect, useState, useRef } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [currentUser, setCurrentUser] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
-    setCurrentUser(user);
-  }, []);
+  const { currentUser, logout } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -34,12 +30,14 @@ const Navbar = () => {
     };
   }, [dropdownOpen]);
 
-  const handleSignOut = () => {
-    localStorage.removeItem('currentUser');
-    setCurrentUser(null);
-    setDropdownOpen(false);
-    navigate('/');
-    window.location.reload();
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      setDropdownOpen(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    }
   };
 
   return (
@@ -111,7 +109,8 @@ const Navbar = () => {
               {currentUser && dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-fade-in">
                   <div className="px-4 py-3 border-b border-gray-100">
-                    <span className="block text-[#123458] font-semibold text-base">{currentUser.name}</span>
+                    <span className="block text-[#123458] font-semibold text-base">{currentUser.displayName}</span>
+                    <span className="block text-gray-500 text-sm">{currentUser.email}</span>
                   </div>
                   <button
                     onClick={handleSignOut}
