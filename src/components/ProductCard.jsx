@@ -1,3 +1,4 @@
+import React from 'react';
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
@@ -108,18 +109,18 @@ const ProductCard = ({ product, isCarousel = false }) => {
                 </span>
               )}
             </div>
-            <button
+            <div
               onClick={handleWishlistClick}
-              className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white transition-colors z-10"
+              className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center cursor-pointer transition-colors"
             >
               <Heart
-                className={`h-5 w-5 ${
+                className={`w-4 h-4 ${
                   isInWishlist(product.id)
-                    ? "text-red-500 fill-red-500"
-                    : "text-gray-400"
+                    ? "fill-red-500 text-red-500"
+                    : "text-white"
                 }`}
               />
-            </button>
+            </div>
           </div>
           <div className="p-4">
             <h3 className="font-bold text-[#030303] text-lg mb-1 line-clamp-1">

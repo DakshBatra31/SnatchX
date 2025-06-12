@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getFirestore, initializeFirestore, CACHE_SIZE_UNLIMITED } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyD4i8iLIR1QZfO1seDy-W8bHZR-Fl9PYDE",
@@ -15,4 +16,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
+
+export const db = initializeFirestore(app, {
+    cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+    experimentalForceLongPolling: true, 
+    useFetchStreams: false 
+});
+
 export default app; 

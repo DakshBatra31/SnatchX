@@ -1,136 +1,183 @@
-import React, { useState } from "react";
-import { useCart } from "../context/CartContext";
-import { Link, useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
-import { X, CheckCircle } from "lucide-react";
-
-const getOrSetDiscount = (productId) => {
-  const key = `discount_${productId}`;
-  let discount = localStorage.getItem(key);
-  if (discount) return Number(discount);
-  discount = Math.floor(Math.random() * 61) + 20; // 20-80
-  localStorage.setItem(key, discount);
-  return discount;
-};
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import Navbar from './Navbar';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { CheckCircle } from 'lucide-react';
 
 const CartPage = () => {
-  const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
-  const [showSuccess, setShowSuccess] = useState(false);
+  const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const getOrSetDiscount = (productId) => {
+    const key = `discount_${productId}`;
+    let discount = localStorage.getItem(key);
+    if (discount) return Number(discount);
+    discount = Math.floor(Math.random() * 61) + 20; // 20-80
+    localStorage.setItem(key, discount);
+    return discount;
+  };
 
   const getDiscountedPrice = (item) => {
     const discount = getOrSetDiscount(item.id);
     const originalPrice = item.price * 75;
     return originalPrice * (1 - discount / 100);
   };
-  const getOriginalPrice = (item) => item.price * 75;
-  const getDiscount = (item) => getOrSetDiscount(item.id);
-  const total = cart.reduce((sum, item) => sum + getDiscountedPrice(item) * item.quantity, 0);
 
-  const handleCheckout = () => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const getOriginalPrice = (item) => item.price * 75;
+
+  const handleCheckout = async () => {
     if (!currentUser) {
-      navigate("/login", { state: { from: "/cart" } });
+      navigate('/login');
       return;
     }
-    clearCart();
     setShowSuccess(true);
+    try {
+      console.log('Starting checkout process...');
+      const orderData = {
+        userId: currentUser.uid,
+        items: cart,
+        totalAmount: cart.reduce((total, item) => total + (getDiscountedPrice(item) * item.quantity), 0),
+        createdAt: new Date(),
+        status: 'Order Placed',
+        shippingDays: Math.floor(Math.random() * 3) + 2 // 2-4 days
+      };
+
+      console.log('Creating order in Firebase...');
+      await addDoc(collection(db, 'orders'), orderData);
+      console.log('Order created successfully');
+      
+      
+      
+      setTimeout(() => {
+        setShowSuccess(true);
+        clearCart();
+        navigate('/orders');
+
+      }, 5000);
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
   };
+
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#F1EFEC]">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-[#123458] mb-8">Shopping Cart</h1>
+          <div className="text-center py-12">
+            <p className="text-gray-500 mb-4">Your cart is empty</p>
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-2 bg-[#123458] text-white rounded hover:bg-[#0e2747] transition-colors"
+            >
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const total = cart.reduce((sum, item) => sum + (getDiscountedPrice(item) * item.quantity), 0);
 
   return (
     <>
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-[#123458] mb-6">My Cart</h1>
-        {cart.length === 0 ? (
-          <div className="text-center py-12 bg-[#F1EFEC] rounded-lg">
-            <p className="text-[#030303] text-lg mb-2">Your cart is empty</p>
-            <p className="text-gray-500 mb-4">Add some products to your cart to see them here!</p>
-            <Link
-              to="/products"
-              className="mt-4 px-6 py-2 bg-[#123458] text-white rounded-lg hover:bg-[#123458]/90 transition-colors inline-block"
-            >
-              Browse Products
-            </Link>
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex flex-col gap-6">
+      <div className="min-h-screen bg-[#F1EFEC]">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold text-[#123458] mb-8">Shopping Cart</h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
               {cart.map((item) => (
-                <div key={item.id} className="flex flex-col sm:flex-row items-center gap-4 border-b pb-4 last:border-b-0 last:pb-0 relative">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-24 h-24 object-contain rounded"
-                  />
-                  <div className="flex-1 w-full">
-                    <h2 className="font-bold text-lg text-[#030303] mb-1">{item.title}</h2>
-                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">{item.description}</p>
-                    <div className="flex items-center gap-2 mb-2 flex-wrap">
-                      <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
-                        {getDiscount(item)}% OFF
-                      </span>
-                      <span className="text-[#123458] font-bold text-lg">₹{getDiscountedPrice(item).toFixed(2)}</span>
-                      <span className="text-gray-400 line-through text-sm">₹{getOriginalPrice(item).toFixed(2)}</span>
-                      <span className="text-gray-500 text-sm">x</span>
-                      <div className="flex items-center border rounded overflow-hidden">
+                <div key={item.id} className="bg-white rounded-lg shadow-md p-6 mb-4">
+                  <div className="flex items-center">
+                    <img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="w-24 h-24 object-contain"
+                    />
+                    <div className="ml-6 flex-grow">
+                      <h3 className="text-lg font-medium text-[#123458]">{item.title}</h3>
+                      <div className="mt-2">
+                        <p className="text-gray-500 line-through">
+                          ₹{getOriginalPrice(item).toFixed(2)}
+                        </p>
+                        <p className="text-[#123458] font-medium">
+                          ₹{getDiscountedPrice(item).toFixed(2)}
+                        </p>
+                        <p className="text-green-600">
+                          {getOrSetDiscount(item.id)}% OFF
+                        </p>
+                      </div>
+                      <div className="mt-4 flex items-center">
                         <button
-                          className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-lg font-bold"
-                          onClick={() => {
-                            if (item.quantity === 1) {
-                              removeFromCart(item.id);
-                            } else {
-                              updateQuantity(item.id, item.quantity - 1);
-                            }
-                          }}
+                          onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                          className="px-2 py-1 border rounded"
                         >
                           -
                         </button>
-                        <span className="px-3 py-1 bg-white text-base font-medium">
-                          {item.quantity}
-                        </span>
+                        <span className="mx-4">{item.quantity}</span>
                         <button
-                          className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-lg font-bold"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          className="px-2 py-1 border rounded"
                         >
                           +
                         </button>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="ml-4 text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
                       </div>
-                      <span className="ml-4 text-[#123458] font-semibold">
-                        Amt: ₹{(getDiscountedPrice(item) * item.quantity).toFixed(2)}
-                      </span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-medium text-[#123458]">
+                        ₹{(getDiscountedPrice(item) * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="absolute top-0 right-0 m-2 p-2 rounded-full bg-red-100 hover:bg-red-200 transition-colors text-red-600 shadow-sm"
-                    title="Remove"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
                 </div>
               ))}
             </div>
-            <div className="flex flex-col sm:flex-row justify-between items-center mt-8 gap-4">
-              <button
-                onClick={clearCart}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
-              >
-                Clear Cart
-              </button>
-              <div className="text-xl font-bold text-[#123458]">
-                Total: ₹{total.toFixed(2)}
+            
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-bold text-[#123458] mb-4">Order Summary</h2>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="text-[#123458] font-medium">₹{total.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Shipping</span>
+                    <span className="text-[#123458] font-medium">Free</span>
+                  </div>
+                  <div className="border-t pt-2 mt-2">
+                    <div className="flex justify-between">
+                      <span className="text-lg font-bold text-[#123458]">Total</span>
+                      <span className="text-lg font-bold text-[#123458]">₹{total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="px-6 py-2 bg-[#123458] text-white rounded-lg font-semibold hover:bg-[#123458]/90 transition-colors w-full mt-6"
+                  disabled={cart.length === 0}
+                  onClick={handleCheckout}
+                >
+                  Proceed to Checkout
+                </button>
               </div>
-              <button
-                className="px-6 py-2 bg-[#123458] text-white rounded-lg font-semibold hover:bg-[#123458]/90 transition-colors"
-                disabled={cart.length === 0}
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-              </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
       {showSuccess && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
@@ -138,12 +185,7 @@ const CartPage = () => {
             <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
             <h2 className="text-2xl font-bold mb-2 text-[#123458]">Order Placed!</h2>
             <p className="text-gray-700 mb-4 text-center">Thank you for your purchase. Your order has been placed successfully.</p>
-            <button
-              className="px-6 py-2 bg-[#123458] text-white rounded-lg font-semibold hover:bg-[#123458]/90 transition-colors"
-              onClick={() => setShowSuccess(false)}
-            >
-              Close
-            </button>
+            <p className="text-gray-600 text-sm mb-4">Redirecting to order history...</p>
           </div>
         </div>
       )}

@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import CartPage from "./components/CartPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
+import OrderHistoryPage from './pages/OrderHistoryPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/cart" element={<CartPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/orders" element={<OrderHistoryPage />} />
             </Routes>
           </WishlistProvider>
         </CartProvider>

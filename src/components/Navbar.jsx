@@ -1,43 +1,41 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, User } from 'lucide-react';
+import { ShoppingCart, Heart, User, Package, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useEffect, useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
+import OrderHistory from './OrderHistory';
 
 const Navbar = () => {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showOrders, setShowOrders] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, signOut } = useAuth();
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
+        setShowDropdown(false);
+        setShowOrders(false);
       }
-    }
-    if (dropdownOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownOpen]);
 
-  const handleSignOut = async () => {
-    try {
-      await logout();
-      setDropdownOpen(false);
-      navigate('/');
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSignOut = () => {
+    signOut();
+    setShowDropdown(false);
+    setShowOrders(false);
+  };
+
+  const toggleOrders = () => {
+    setShowOrders(!showOrders);
   };
 
   return (
@@ -92,11 +90,12 @@ const Navbar = () => {
               {currentUser ? (
                 <button
                   className="p-2 text-[#030303] hover:text-[#123458] rounded-full hover:bg-[#F1EFEC] transition-colors focus:outline-none"
-                  onClick={() => setDropdownOpen((open) => !open)}
+                  onClick={() => setShowDropdown(!showDropdown)}
                   aria-haspopup="true"
-                  aria-expanded={dropdownOpen}
+                  aria-expanded={showDropdown}
                 >
-                  <User className="h-6 w-6" />
+                  <span className="font-medium">{currentUser.email}</span>
+                  <ChevronDown className="h-4 w-4" />
                 </button>
               ) : (
                 <Link
@@ -106,17 +105,20 @@ const Navbar = () => {
                   <User className="h-6 w-6" />
                 </Link>
               )}
-              {currentUser && dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 animate-fade-in">
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <span className="block text-[#123458] font-semibold text-base">{currentUser.displayName}</span>
-                    <span className="block text-gray-500 text-sm">{currentUser.email}</span>
-                  </div>
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                  <Link
+                    to="/orders"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    Order History
+                  </Link>
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-left px-4 py-2 text-[#123458] hover:bg-[#F1EFEC] font-medium rounded-b-lg transition-colors"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Sign out
+                    Sign Out
                   </button>
                 </div>
               )}
