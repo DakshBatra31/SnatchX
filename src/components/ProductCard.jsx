@@ -99,13 +99,13 @@ const ProductCard = ({ product, isCarousel = false }) => {
             </div>
             <div
               onClick={handleWishlistClick}
-              className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center cursor-pointer transition-colors"
+              className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center cursor-pointer transition-colors shadow-md z-20"
             >
               <Heart
-                className={`w-4 h-4 ${
+                className={`w-5 h-5 ${
                   isInWishlist(product.id)
                     ? "fill-red-500 text-red-500"
-                    : "text-white"
+                    : "text-gray-400 hover:text-red-500"
                 }`}
               />
             </div>
