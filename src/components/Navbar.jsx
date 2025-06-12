@@ -14,7 +14,7 @@ const Navbar = () => {
   const [showOrders, setShowOrders] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { currentUser, signOut } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -28,10 +28,15 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = () => {
-    signOut();
-    setShowDropdown(false);
-    setShowOrders(false);
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      setShowDropdown(false);
+      setShowOrders(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   const toggleOrders = () => {

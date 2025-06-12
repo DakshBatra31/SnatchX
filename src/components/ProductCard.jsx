@@ -4,25 +4,13 @@ import { Link } from "react-router-dom";
 import { useWishlist } from "../context/WishlistContext";
 import { useCart } from "../context/CartContext";
 import { useEffect, useState } from "react";
-
-const getOrSetDiscount = (productId) => {
-  const key = `discount_${productId}`;
-  let discount = localStorage.getItem(key);
-  if (discount) return Number(discount);
-  discount = Math.floor(Math.random() * 61) + 20; // 20-80
-  localStorage.setItem(key, discount);
-  return discount;
-};
+import { getDailyDiscount } from '../utils/discountUtils';
 
 const ProductCard = ({ product, isCarousel = false }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { isInCart, addToCart, updateQuantity, cart } = useCart();
-  const [discount, setDiscount] = useState(() => getOrSetDiscount(product.id));
+  const discount = getDailyDiscount(product.id);
   const [showQuantity, setShowQuantity] = useState(false);
-
-  useEffect(() => {
-    setDiscount(getOrSetDiscount(product.id));
-  }, [product.id]);
 
   const handleWishlistClick = (e) => {
     e.preventDefault();

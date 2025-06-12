@@ -11,15 +11,7 @@ import {
 import { db } from '../firebase/config';
 import Navbar from '../components/Navbar';
 import { useCart } from '../context/CartContext';
-
-const getOrSetDiscount = (productId) => {
-  const key = `discount_${productId}`;
-  let discount = localStorage.getItem(key);
-  if (discount) return Number(discount);
-  discount = Math.floor(Math.random() * 61) + 20; // 20-80
-  localStorage.setItem(key, discount);
-  return discount;
-};
+import { getDailyDiscount } from '../utils/discountUtils';
 
 const OrderHistoryPage = () => {
   const { currentUser } = useAuth();
@@ -29,7 +21,7 @@ const OrderHistoryPage = () => {
   const [error, setError] = useState(null);
 
   const getDiscountedPrice = (item) => {
-    const discount = getOrSetDiscount(item.id);
+    const discount = getDailyDiscount(item.id);
     const originalPrice = item.price * 75;
     return originalPrice * (1 - discount / 100);
   };
@@ -188,7 +180,7 @@ const OrderHistoryPage = () => {
                               ₹{getDiscountedPrice(item).toFixed(2)}
                             </p>
                             <p className="text-green-600">
-                              {getOrSetDiscount(item.id)}% OFF
+                              {getDailyDiscount(item.id)}% OFF
                             </p>
                           </div>
                         </div>

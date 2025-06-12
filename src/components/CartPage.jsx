@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { CheckCircle } from 'lucide-react';
+import { getDailyDiscount } from '../utils/discountUtils';
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -13,17 +14,8 @@ const CartPage = () => {
   const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const getOrSetDiscount = (productId) => {
-    const key = `discount_${productId}`;
-    let discount = localStorage.getItem(key);
-    if (discount) return Number(discount);
-    discount = Math.floor(Math.random() * 61) + 20; // 20-80
-    localStorage.setItem(key, discount);
-    return discount;
-  };
-
   const getDiscountedPrice = (item) => {
-    const discount = getOrSetDiscount(item.id);
+    const discount = getDailyDiscount(item.id);
     const originalPrice = item.price * 75;
     return originalPrice * (1 - discount / 100);
   };
@@ -35,7 +27,7 @@ const CartPage = () => {
       navigate('/login');
       return;
     }
-    setShowSuccess(true);
+
     try {
       console.log('Starting checkout process...');
       const orderData = {
@@ -51,13 +43,12 @@ const CartPage = () => {
       await addDoc(collection(db, 'orders'), orderData);
       console.log('Order created successfully');
       
-      
+      setShowSuccess(true);
+      clearCart();
       
       setTimeout(() => {
-        setShowSuccess(true);
-        clearCart();
+        setShowSuccess(false);
         navigate('/orders');
-
       }, 5000);
     } catch (error) {
       console.error('Error creating order:', error);
@@ -113,7 +104,7 @@ const CartPage = () => {
                           ₹{getDiscountedPrice(item).toFixed(2)}
                         </p>
                         <p className="text-green-600">
-                          {getOrSetDiscount(item.id)}% OFF
+                          {getDailyDiscount(item.id)}% OFF
                         </p>
                       </div>
                       <div className="mt-4 flex items-center">

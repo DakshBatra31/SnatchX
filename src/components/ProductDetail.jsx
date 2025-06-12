@@ -5,15 +5,7 @@ import ProductCard from '../components/ProductCard';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import Navbar from './Navbar';
-
-const getOrSetDiscount = (productId) => {
-  const key = `discount_${productId}`;
-  let discount = localStorage.getItem(key);
-  if (discount) return Number(discount);
-  discount = Math.floor(Math.random() * 61) + 20; // 20-80
-  localStorage.setItem(key, discount);
-  return discount;
-};
+import { getDailyDiscount } from '../utils/discountUtils';
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
@@ -23,12 +15,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null);
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { isInCart, addToCart, updateQuantity, cart } = useCart();
-  const [discount, setDiscount] = useState(() => getOrSetDiscount(productId));
   const [showQuantity, setShowQuantity] = useState(false);
-
-  useEffect(() => {
-    setDiscount(getOrSetDiscount(productId));
-  }, [productId]);
 
   const handleWishlistClick = () => {
     if (product) {
@@ -118,6 +105,7 @@ const ProductDetailPage = () => {
     );
   }
 
+  const discount = getDailyDiscount(product.id);
   const originalPrice = product.price * 75;
   const discountedPrice = originalPrice * (1 - discount / 100);
 
