@@ -44,10 +44,10 @@ const CartPage = () => {
       console.log('Order created successfully');
       
       setShowSuccess(true);
-      clearCart();
       
       setTimeout(() => {
         setShowSuccess(false);
+        clearCart();
         navigate('/orders');
       }, 5000);
     } catch (error) {
