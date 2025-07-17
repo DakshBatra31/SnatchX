@@ -29,7 +29,7 @@ shopping experience with dynamic daily discounts and a clean, responsive UI.
 
 
 ## 📦 Project Structure
-``
+```
 SnatchX-main/
 ├── src/
 │   ├── components/        # React components (ProductCard, ProductDetail, etc.)
@@ -42,7 +42,7 @@ SnatchX-main/
 ├── public/                # Static assets
 ├── package.json           # Project metadata and scripts
 └── README.md              # This file
-``
+```
 ---
 
 
